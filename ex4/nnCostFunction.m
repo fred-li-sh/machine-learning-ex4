@@ -27,8 +27,8 @@ m = size(X, 1);
          
 % You need to return the following variables correctly 
 J = 0;
-Theta1_grad = zeros(size(Theta1));
-Theta2_grad = zeros(size(Theta2));
+D1 = zeros(size(Theta1));
+D2 = zeros(size(Theta2));
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -40,9 +40,9 @@ Theta2_grad = zeros(size(Theta2));
 %         computed in ex4.m
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
-%         Theta1_grad and Theta2_grad. You should return the partial derivatives of
-%         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
-%         Theta2_grad, respectively. After implementing Part 2, you can check
+%         D1 and D2. You should return the partial derivatives of
+%         the cost function with respect to Theta1 and Theta2 in D1 and
+%         D2, respectively. After implementing Part 2, you can check
 %         that your implementation is correct by running checkNNGradients
 %
 %         Note: The vector y passed into the function is a vector of labels
@@ -58,8 +58,8 @@ Theta2_grad = zeros(size(Theta2));
 %
 %         Hint: You can implement this around the code for
 %               backpropagation. That is, you can compute the gradients for
-%               the regularization separately and then add them to Theta1_grad
-%               and Theta2_grad from Part 2.
+%               the regularization separately and then add them to D1
+%               and D2 from Part 2.
 %
 
 
@@ -95,17 +95,17 @@ for row = 1:m
     y = yk(row, :);
     J = J - y * log(a3) - (1 - y) * log(1 - a3);
 
-    Theta1_grad = Theta1_grad + delta2 * a1';
-    Theta2_grad = Theta2_grad + delta3 * a2';
+    D1 = D1 + delta2 * a1';
+    D2 = D2 + delta3 * a2';
 end
 
-r = (lambda / (2 * m)) * (sum(sum(Theta1(:, 2:end) .^ 2, 2)) + sum(sum(Theta2(:, 2:end) .^ 2, 2)));
+r = (lambda / (2 * m)) * (sum(sum(Theta1(:, 2:end) .^ 2)) + sum(sum(Theta2(:, 2:end) .^ 2)));
 J = J / m + r;
 
-Theta1_grad = Theta1_grad ./ m;
-Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) + (lambda/m) * Theta1(:, 2:end);
-Theta2_grad = Theta2_grad ./ m;
-Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) + (lambda/m) * Theta2(:, 2:end);
+D1 = D1 ./ m;
+D1(:, 2:end) = D1(:, 2:end) + (lambda/m) * Theta1(:, 2:end);
+D2 = D2 ./ m;
+D2(:, 2:end) = D2(:, 2:end) + (lambda/m) * Theta2(:, 2:end);
 
 
 % -------------------------------------------------------------
@@ -113,7 +113,7 @@ Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) + (lambda/m) * Theta2(:, 2:end);
 % =========================================================================
 
 % Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
+grad = [D1(:) ; D2(:)];
 
 
 end
