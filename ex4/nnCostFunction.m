@@ -78,6 +78,7 @@ end
 % J = (1/m) * sum(sum(((-yk) .* log(h) - (1 - yk) .* log(1 - h)), 2));
 
 for row = 1:m
+    % forward propgation
     a1 = [1 X(row,:)]';
     z2 = Theta1 * a1;
     a2 = sigmoid(z2);
@@ -85,6 +86,7 @@ for row = 1:m
     z3 = Theta2 * a2;
     a3 = sigmoid(z3);
  
+    % backward propgation
     z2 = [1; z2];
     delta3 = a3 - yk'(:, row);
     delta2 = (Theta2' * delta3) .* sigmoidGradient(z2);
