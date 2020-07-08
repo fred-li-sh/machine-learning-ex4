@@ -77,7 +77,7 @@ end
 
 % J = (1/m) * sum(sum(((-yk) .* log(h) - (1 - yk) .* log(1 - h)), 2));
 
-for row = 1:m
+for row = 1 : m
     % forward propgation
     a1 = [1 X(row,:)]';
     z2 = Theta1 * a1;
@@ -86,19 +86,20 @@ for row = 1:m
     z3 = Theta2 * a2;
     a3 = sigmoid(z3);
  
+    y = yk(row, :);
+    J = J - y * log(a3) - (1 - y) * log(1 - a3);
+ 
     % backward propgation
     z2 = [1; z2];
     delta3 = a3 - yk'(:, row);
     delta2 = (Theta2' * delta3) .* sigmoidGradient(z2);
     delta2 = delta2(2:end);
- 
-    y = yk(row, :);
-    J = J - y * log(a3) - (1 - y) * log(1 - a3);
 
     D1 = D1 + delta2 * a1';
     D2 = D2 + delta3 * a2';
 end
 
+% regulation
 r = (lambda / (2 * m)) * (sum(sum(Theta1(:, 2:end) .^ 2)) + sum(sum(Theta2(:, 2:end) .^ 2)));
 J = J / m + r;
 
